@@ -27,6 +27,10 @@ app.use(express.json());
 // API Routes
 app.use("/api/v1", apiRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Welcome to GameHub Backend");
+});
+
 io.on("connection", (socket) => {
     registerSocketHandlers(io, socket);
 });
