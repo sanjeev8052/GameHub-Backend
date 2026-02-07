@@ -252,6 +252,17 @@ export default function registerSocketHandlers(io, socket) {
         }
     });
 
+    // --- VOICE CHAT SIGNALING ---
+    socket.on("webrtc-signal", ({ gameId, targetId, signal }) => {
+        // Relay signal to specific peer
+        io.to(targetId).emit("webrtc-signal", { fromId: socket.id, signal });
+    });
+
+    socket.on("toggle-voice", ({ gameId, isMuted }) => {
+        // Broadcast voice status change to others in the room
+        socket.to(gameId).emit("player-voice-status", { playerId: socket.id, isMuted });
+    });
+
     socket.on("disconnect", () => {
         onlineUsers.delete(socket.id);
         // Clear from queues
